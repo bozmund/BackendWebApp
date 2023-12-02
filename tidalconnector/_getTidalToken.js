@@ -1,10 +1,9 @@
-async function _getToken(spotifyClientID, spotifyClientSecret) {
-  const result = await fetch("https://accounts.spotify.com/api/token", {
+async function _getTidalToken(tidalClientId, tidalClientSecret) {
+  const result = await fetch("https://auth.tidal.com/v1/oauth2/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization:
-        "Basic " + btoa(spotifyClientID + ":" + spotifyClientSecret),
+      Authorization: "Basic " + btoa(tidalClientId + ":" + tidalClientSecret),
     },
     body: "grant_type=client_credentials",
   });
@@ -14,4 +13,4 @@ async function _getToken(spotifyClientID, spotifyClientSecret) {
   return access_token;
 }
 
-export { _getToken };
+export { _getTidalToken };
