@@ -1,3 +1,5 @@
+//
+
 import express from "express";
 import mongoose from "mongoose";
 import {} from "dotenv/config";
@@ -41,6 +43,36 @@ if (!spotify_access_token || !tidal_access_token) {
 //  );
 //  res.send(response);
 //});
+
+// GET endpoint for playlists
+app.get("/playlists", (req, res) => {
+  // Logic to retrieve playlists from the database
+  // Send the playlists as a response
+  res.send("Get playlists endpoint");
+});
+
+// GET endpoint for songs
+app.get("/songs", (req, res) => {
+  // Logic to retrieve songs from the database
+  // Send the songs as a response
+  res.send("Get songs endpoint");
+});
+
+// POST endpoint for playlists
+app.post("/playlists", (req, res) => {
+  // Logic to create a new playlist in the database
+  // Send a success message or the created playlist as a response
+  res.send("Post playlists endpoint");
+});
+
+// POST endpoint for songs
+app.post("/songs", (req, res) => {
+  // Logic to create a new song in the database
+  // Send a success message or the created song as a response
+  res.send("Post songs endpoint");
+});
+
+app.post;
 
 app.listen(port, () => {
   console.log(`Example app listening on port http://localhost:${port}`);
