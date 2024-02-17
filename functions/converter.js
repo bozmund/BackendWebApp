@@ -26,43 +26,60 @@ async function convertSongTidalSpotify(
   const spotifyResponse = await spotifySearchSong(spotifySearchParameters, spotify_access_token);
   return spotifyResponse.data;
 }
-export { convertSongSpotifyTidal };
-  async function tidalSearchSong(tidalSearchParameters, tidal_access_token) {
-    return await axios.get("https://openapi.tidal.com/search", {
-      params: {
-        query: tidalSearchParameters,
-        offset: 0,
-        limit: 10,
-        countryCode: "US",
-        popularity: "WORLDWIDE",
-      },
+
+async function convertPlaylistSpotifyTidal(
+  playlistId,
+  spotify_access_token,
+  tidal_access_token
+) {
+  // Logic to convert a Spotify playlist to a Tidal playlist
+}
+
+async function convertPlaylistTidalSpotify(
+  playlistId,
+  tidal_access_token,
+  spotify_access_token
+) {
+  // Logic to convert a Tidal playlist to a Spotify playlist
+}
+
+async function tidalSearchSong(tidalSearchParameters, tidal_access_token) {
+  return await axios.get("https://openapi.tidal.com/search", {
+    params: {
+      query: tidalSearchParameters,
+      offset: 0,
+      limit: 10,
+      countryCode: "US",
+      popularity: "WORLDWIDE",
+    },
+    headers: {
+      'accept': "application/vnd.tidal.v1+json",
+      'Authorization': "Bearer " + tidal_access_token,
+      "Content-Type": "application/vnd.tidal.v1+json",
+    },
+  });
+}
+async function spotifyGetSong(songId, spotify_access_token) {
+  return await axios.get(
+    `https://api.spotify.com/v1/tracks/${songId}`,
+    {
       headers: {
-        'accept': "application/vnd.tidal.v1+json",
-        'Authorization': "Bearer " + tidal_access_token,
-        "Content-Type": "application/vnd.tidal.v1+json",
+        Authorization: `Bearer ${spotify_access_token}`,
       },
-    });
-  }
+    }
+  );
+}
+async function tidalGetSong(songId, tidal_access_token) {
+  return await axios.get(
+    `https://api.tidal.com/v1/tracks/${songId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${tidal_access_token}`,
+      },
+    }
+  );
+}
 
-  async function spotifyGetSong(songId, spotify_access_token) {
-    return await axios.get(
-      `https://api.spotify.com/v1/tracks/${songId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${spotify_access_token}`,
-        },
-      }
-    );
-  }
-
-  async function tidalGetSong(songId, tidal_access_token) {
-    return await axios.get(
-      `https://api.tidal.com/v1/tracks/${songId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${tidal_access_token}`,
-        },
-      }
-    );
-  }
+  
+export { convertSongSpotifyTidal };
 
