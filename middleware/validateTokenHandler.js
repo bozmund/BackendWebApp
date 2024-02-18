@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
 
 const validateToken = (req, res, next) => {
-	const token = req.headers.authorization;
+	let token = req.headers.authorization;
+
+	token = token.split(" ")[1];
 
 	// Check if token is present
 	if (!token) {
@@ -12,13 +14,11 @@ const validateToken = (req, res, next) => {
 	// ...
 	jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
 		if (err) {
-			return res.status(403).json({ message: "Forbidden" });
+			return next(err); // Pass the error to the error handling middleware
 		}
 		req.user = decoded.user;
+		next();
 	});
-
-	// If token is valid, proceed to the next middleware or route handler
-	next();
 };
 
 export default validateToken;

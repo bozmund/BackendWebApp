@@ -20,7 +20,7 @@ async function convertSongTidalSpotify(
   spotify_access_token
 ) {
   const tidalResponse = await tidalGetSong(songId, tidal_access_token);
-  const tidalSongResponseData = tidalResponse.data;
+  const tidalSongResponseData = tidalResponse.data.resource;
   const spotifySearchParameters =
     tidalSongResponseData.artists[0].name + " " + tidalSongResponseData.title;
   const spotifyResponse = await spotifySearchSong(spotifySearchParameters, spotify_access_token);
@@ -59,6 +59,20 @@ async function tidalSearchSong(tidalSearchParameters, tidal_access_token) {
     },
   });
 }
+async function spotifySearchSong(spotifySearchParameters, spotify_access_token) {
+  return await axios.get("https://api.spotify.com/v1/search", {
+    params: {
+      q: spotifySearchParameters,
+      type: "track",
+      market: "US",
+      limit: 10,
+      offset: 0,
+    },
+    headers: {
+      Authorization: `Bearer ${spotify_access_token}`,
+    },
+  });
+}
 async function spotifyGetSong(songId, spotify_access_token) {
   return await axios.get(
     `https://api.spotify.com/v1/tracks/${songId}`,
@@ -71,15 +85,17 @@ async function spotifyGetSong(songId, spotify_access_token) {
 }
 async function tidalGetSong(songId, tidal_access_token) {
   return await axios.get(
-    `https://api.tidal.com/v1/tracks/${songId}`,
+    `https://openapi.tidal.com/tracks/${songId}?countryCode=US`,
     {
       headers: {
-        Authorization: `Bearer ${tidal_access_token}`,
-      },
+        'accept': "application/vnd.tidal.v1+json",
+        'Authorization': "Bearer " + tidal_access_token,
+        "Content-Type": "application/vnd.tidal.v1+json",
+      }
     }
   );
 }
 
   
-export { convertSongSpotifyTidal };
+export { convertSongSpotifyTidal, convertSongTidalSpotify, convertPlaylistSpotifyTidal, convertPlaylistTidalSpotify};
 

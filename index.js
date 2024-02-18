@@ -8,7 +8,7 @@ import validateToken from "./middleware/validateTokenHandler.js";
 import { UserModel } from "./models/mongodbmodels.js";
 import { _getSpotifyToken } from "./spotifyconnector/_getSpotifyToken.js";
 import { _getTidalToken } from "./tidalconnector/_getTidalToken.js";
-import { convertSongSpotifyTidal } from "./functions/converter.js";
+import { convertSongSpotifyTidal, convertSongTidalSpotify } from "./functions/converter.js";
 
 const client_credentials = {
   spotify_client_id: process.env.SPOTIFY_CLIENT_ID,
@@ -152,12 +152,16 @@ app.post("/api/v1/register", async (req, res) => {
 });
 
 app.get(`/api/v1/convert/Song/Spotify/Tidal/:link`, validateToken, async (req, res) => {
-  let conversion = await convertSongSpotifyTidal(
-    req.params.link,
-    spotify_access_token,
-    tidal_access_token
-  );
-  res.send(conversion);
+  try {
+    let conversion = await convertSongSpotifyTidal(
+      req.params.link,
+      spotify_access_token,
+      tidal_access_token
+    );
+    res.send(conversion);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to convert song" });
+  }
 });
 
 app.get(`/api/v1/convert/Song/Tidal/Spotify/:link`, validateToken, async (req, res) => {
