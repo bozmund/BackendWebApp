@@ -6,6 +6,7 @@ class SpotifySongResponse {
       release_date_precision: data.album.release_date_precision,
       total_tracks: data.album.total_tracks,
       type: data.album.type,
+      available_markets: data.album.available_markets[0],
     };
     this.artists = data.artists.map((artist) => ({ name: artist.name }));
     this.duration_ms = data.duration_ms;

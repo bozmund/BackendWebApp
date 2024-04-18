@@ -5,16 +5,18 @@ import {} from "dotenv/config";
 import cors from "cors"; // Import cors module
 import jwt from "jsonwebtoken"; // Import JWT module
 import validateToken from "./middleware/validateTokenHandler.js";
+import { google } from "googleapis";
 import { UserModel } from "./models/mongodbmodels.js";
 import { _getSpotifyToken } from "./spotifyconnector/_getSpotifyToken.js";
 import { _getTidalToken } from "./tidalconnector/_getTidalToken.js";
-import { convertSongSpotifyTidal, convertSongTidalSpotify } from "./functions/converter.js";
+import { convertSongSpotifyTidal, convertSongTidalSpotify, convertPlaylistSpotifyTidal } from "./functions/converter.js";
 
 const client_credentials = {
   spotify_client_id: process.env.SPOTIFY_CLIENT_ID,
   spotify_client_secret: process.env.SPOTIFY_CLIENT_SECRET,
   tidal_client_id: process.env.TIDAL_CLIENT_ID,
   tidal_client_secret: process.env.TIDAL_CLIENT_SECRET,
+  google_api_key: process.env.GOOGLE_API_KEY,
 };
 
 const port = 3001;
@@ -47,7 +49,7 @@ if (!spotify_access_token || !tidal_access_token) {
 }
 
 // Get user endpoint
-app.get("/api/v1/user", async (req, res) => {
+app.get("/api/v1/user", async (req, res) => {//done
   try {
     const token = req.headers.authorization.split(" ")[1];
     if(!token) return; // Get the token from the authorization header
@@ -67,10 +69,8 @@ app.get("/api/v1/user", async (req, res) => {
     res.json({ error: "User is not logged in."});
   }
 });
-
-
 // Login endpoint
-app.post("/api/v1/login", async (req, res) => {
+app.post("/api/v1/login", async (req, res) => {//done
   // Logic to authenticate user credentials
   const email = req.body.email;
   const password = req.body.password;
@@ -103,9 +103,8 @@ app.post("/api/v1/login", async (req, res) => {
     res.status(401).json({ error: "Invalid email or password" });
   }
 });
-
 // Register endpoint
-app.post("/api/v1/register", async (req, res) => {
+app.post("/api/v1/register", async (req, res) => {//done
   // Logic to register a new user
   const { username, email, password } = req.body;
 
@@ -151,7 +150,7 @@ app.post("/api/v1/register", async (req, res) => {
   }
 });
 
-app.get(`/api/v1/convert/Song/Spotify/Tidal/:link`, validateToken, async (req, res) => {
+app.get(`/api/v1/convert/Song/Spotify/Tidal/:link`, validateToken, async (req, res) => {//done
   try {
     let conversion = await convertSongSpotifyTidal(
       req.params.link,
@@ -164,7 +163,7 @@ app.get(`/api/v1/convert/Song/Spotify/Tidal/:link`, validateToken, async (req, r
   }
 });
 
-app.get(`/api/v1/convert/Song/Tidal/Spotify/:link`, validateToken, async (req, res) => {
+app.get(`/api/v1/convert/Song/Tidal/Spotify/:link`, validateToken, async (req, res) => {//done
   let conversion = await convertSongTidalSpotify(
     req.params.link,
     tidal_access_token,
